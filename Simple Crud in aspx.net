@@ -1,0 +1,115 @@
+View Page
+
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Home.aspx.cs" Inherits="Home" %>
+  
+<!DOCTYPE html>  
+  
+<html xmlns="http://www.w3.org/1999/xhtml">  
+<head runat="server">  
+    <title></title>  
+</head>  
+    <h1 style="text-align:center; color:blue">Registration Form</h1>
+  
+<body>  
+    <form id="form1" runat="server">  
+        <div>  
+            <table class="auto-style1">  
+                <tr>  
+                    <td style="text-shadow:10px">Name :</td>  
+                    <td>  
+                        <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>  
+                    </td>  
+  
+               </tr>  
+                <br />
+                <tr>  
+                    <td>Password</td>  
+                     <td> <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox></td>  
+                </tr>  
+                
+                    <br />
+                <tr>  
+                    <td>City</td>  
+                    <td>  
+                        <asp:DropDownList ID="DropDownList1" runat="server">  
+                            <asp:ListItem Text="Select City" Value="select" Selected="True"></asp:ListItem>  
+                            <asp:ListItem Text="Bangalore" Value="Bangalore"></asp:ListItem>  
+                            <asp:ListItem Text="Mysore" Value="Mysore"></asp:ListItem>  
+                            <asp:ListItem Text="Hubli" Value="hubli"></asp:ListItem>  
+                        </asp:DropDownList>  
+                    </td>  
+                </tr>  
+                    <br />
+                <tr>  
+                    <td>Gender</td>  
+                    <td>  
+                        <asp:RadioButtonList ID="RadioButtonList1" runat="server">  
+                            <asp:ListItem>Male</asp:ListItem>  
+                            <asp:ListItem>Female</asp:ListItem>  
+                        </asp:RadioButtonList>  
+                    </td>  
+               </tr>  
+                    <br />
+                <tr>  
+                    <td>Gmail</td>  
+                    <td>  
+                        <asp:TextBox ID="TextBox4" runat="server"></asp:TextBox>  
+                    </td>  
+                </tr>  
+                    <br />
+                <tr>  
+                    <td>  
+                        <asp:Button ID="Button1" runat="server" Text="Submit" OnClick="Button1_Click1" />  
+                    </td>  
+                </tr>  
+                <tr>
+
+                </tr>
+            </table>  
+        </div>  
+    </form>  
+</body>  
+</html> 
+
+
+
+
+
+
+
+Controller Page
+
+
+
+
+using System;
+
+using System.Data.SqlClient;
+             
+
+public partial class Home: System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+  
+    protected void Button1_Click1(object sender, EventArgs e)
+    {
+        try
+        {
+            string con = "Data Source=DESKTOP-38JI9EK\\SQLEXPRESS;Initial Catalog =Hashtaglabs;Trusted_Connection=True; MultipleActiveResultSets=True;TrustServerCertificate=true";
+            SqlConnection db = new SqlConnection(con);
+            db.Open();
+            string insert = "insert into WebForm(Name,Password,City,Gender,Gmail) values('" + TextBox1.Text + "','" + TextBox2.Text + "','" + DropDownList1.SelectedValue + "','" + RadioButtonList1.SelectedValue + "','" + TextBox4.Text + "')";
+            SqlCommand cmd = new SqlCommand(insert, db);
+            cmd.ExecuteNonQuery();
+            db.Close();
+        }
+        catch (Exception ex)
+        {
+            
+        }
+    }
+}
