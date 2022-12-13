@@ -1,0 +1,130 @@
+using System;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+
+
+public partial class Home : System.Web.UI.Page
+{
+    private string strConnectionString = "Data Source=DESKTOP-38JI9EK\\SQLEXPRESS;Initial Catalog =Hashtaglabs;Trusted_Connection=True; MultipleActiveResultSets=True;TrustServerCertificate=true";
+    private SqlCommand cmd;
+    private SqlDataAdapter _sqlDataAdapter;
+    DataSet _dtSet;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    public void SaveData()
+    {
+        try
+        {
+            string con = "Data Source=DESKTOP-38JI9EK\\SQLEXPRESS;Initial Catalog =Hashtaglabs;Trusted_Connection=True; MultipleActiveResultSets=True;TrustServerCertificate=true";
+            SqlConnection db = new SqlConnection(con);
+            db.Open();
+            string insert = "insert into WebForm(Name,Password,City,Gender,Gmail) values('" + TextBox1.Text + "','" + TextBox2.Text + "','" + DropDownList1.SelectedValue + "','" + RadioButtonList1.SelectedValue + "','" + TextBox4.Text + "')";
+            SqlCommand cmd = new SqlCommand(insert, db);
+            cmd.ExecuteNonQuery();
+            db.Close();
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+    public void SaveDataUsingProc()
+    {
+        try
+        {
+            SqlConnection con = new SqlConnection(strConnectionString);
+            cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.Connection.Open();
+            cmd.CommandText = "Proc_WebForm";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@ProcID", "Insert");
+            cmd.Parameters.AddWithValue("@Name", TextBox1.Text);
+            cmd.Parameters.AddWithValue("@Password", TextBox2.Text);
+            cmd.Parameters.AddWithValue("@City", DropDownList1.SelectedValue);
+            cmd.Parameters.AddWithValue("@Gender", RadioButtonList1.SelectedValue);
+            cmd.Parameters.AddWithValue("@Gmail", TextBox4.Text);
+            cmd.ExecuteNonQuery();
+
+        }
+        catch (Exception ex)
+        {
+
+
+
+        }
+
+    }
+
+    protected void Button1_Click1(object sender, EventArgs e)
+    {
+        //SaveData();
+        SaveDataUsingProc();
+    }
+
+    public void LoadData()
+    {
+
+
+        SqlConnection con = new SqlConnection(strConnectionString);
+        cmd = new SqlCommand();
+        cmd.Connection = con;
+        cmd.Connection.Open();
+
+
+
+        SqlDataAdapter Adp = new SqlDataAdapter("select * from WebForm", con);
+        DataTable Dt = new DataTable();
+        Adp.Fill(Dt);
+        GridView1.DataSource = Dt;
+        GridView1.DataBind();
+
+        con.Close();
+    }
+
+
+    protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        SqlConnection conn = new SqlConnection("Data Source=DESKTOP-38JI9EK\\SQLEXPRESS;Initial Catalog =Hashtaglabs;Trusted_Connection=True; MultipleActiveResultSets=True;TrustServerCertificate=true");
+        conn.Open();
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        cmd.ExecuteNonQuery();
+
+        SqlDataAdapter Adp = new SqlDataAdapter("select * from WebForm", conn);
+        DataTable Dt = new DataTable();
+        Adp.Fill(Dt);
+        GridView1.DataSource = Dt;
+        GridView1.DataBind();
+
+    }
+
+    protected void DeleteData(object sender, EventArgs e)
+    {
+        try
+        {
+            SqlConnection con = new SqlConnection(strConnectionString);
+            cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.Connection.Open();
+            cmd.CommandText = "Proc_WebForm";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@ProcID", "Delete");
+           
+            cmd.Parameters.AddWithValue("ID","3");  
+           
+            cmd.ExecuteNonQuery();
+
+        }
+        catch (Exception ex)
+        {
+
+        }
+       
+    }
+}
