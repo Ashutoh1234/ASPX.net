@@ -1,0 +1,26 @@
+  protected void Button1_Click(object sender, EventArgs e)
+    {
+        string mycon = "Data Source=DESKTOP-38JI9EK\\SQLEXPRESS;Initial Catalog =Hashtaglabs;Trusted_Connection=True; MultipleActiveResultSets=True;TrustServerCertificate=true";
+        SqlConnection scon = new SqlConnection(mycon);
+        string myquery = "select * from Signin";
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = myquery;
+        cmd.Connection = scon;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataSet ds = new DataSet();
+        da.Fill(ds);
+        String uname;
+        string pass;
+        uname = ds.Tables[0].Rows[0]["Username"].ToString();
+        pass = ds.Tables[0].Rows[0]["Password"].ToString();
+        scon.Close();
+        if (uname == TextBox1.Text && pass == TextBox2.Text)
+        {
+            Session["Username"] = uname;
+            Response.Redirect("Home.aspx");
+        }
+        else
+        {
+            Response.Redirect("Signout.aspx");
+        }
